@@ -1,0 +1,11 @@
+run
+docker-compose -f stack.yml up 
+
+go to
+localhost:8080
+
+enter
+server: db
+username: root
+password: example
+database: db
