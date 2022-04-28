@@ -8,4 +8,4 @@ enter
 server: db
 username: root
 password: example
-database: db
+database: h1
