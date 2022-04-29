@@ -22,7 +22,7 @@ WHERE Age IN (
     SELECT Age, COUNT(Age) FROM opg00 
     GROUP BY Age
     HAVING COUNT(Age) > 1
-  ) t
+  ) AS t
 );
 
 -- rank people by how long their names are
