@@ -11,24 +11,24 @@ AND (age >= 50 OR age < 45)
 AND (age % 127) <> 0;
 
 -- select people with duplicate ages
-SELECT age, COUNT(age) FROM opg00 
+SELECT age, COUNT(age) as occurances FROM opg00 
 GROUP BY age
-HAVING COUNT(age) > 1;
+HAVING occurances > 1;
 
 -- select * from people with duplicate ages
 SELECT * FROM opg00
 WHERE age IN (
   SELECT t.age FROM (
-    SELECT age, COUNT(age) FROM opg00 
+    SELECT age, COUNT(age) as occurances FROM opg00 
     GROUP BY age
-    HAVING COUNT(age) > 1
+    HAVING occurances > 1
   ) AS t
 );
 
 -- rank people by how long their names are
-SELECT *, LENGTH(name) FROM opg00
-ORDER BY LENGTH(name) DESC;
+SELECT *, LENGTH(name) as name_length FROM opg00
+ORDER BY name_length DESC;
 
 -- average age of people with a certain name
-SELECT name, AVG(age) FROM opg00
+SELECT name, AVG(age) as average_age FROM opg00
 GROUP BY name
