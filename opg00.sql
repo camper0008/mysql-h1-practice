@@ -10,12 +10,12 @@ WHERE name LIKE "D%"
 AND (age >= 50 OR age < 45)
 AND (age % 127) <> 0;
 
--- select people with duplicate ages
+-- select duplicate ages
 SELECT age, COUNT(age) as occurances FROM opg00 
 GROUP BY age
 HAVING occurances > 1;
 
--- select * from people with duplicate ages
+-- select people with duplicate ages
 SELECT * FROM opg00
 WHERE age IN (
   SELECT t.age FROM (
