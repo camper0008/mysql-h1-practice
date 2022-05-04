@@ -7,6 +7,19 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
+INSERT INTO `opg00` (`id`, `name`, `age`) VALUES
+(1,	'dietrich',	127),
+(2,	'dieter',	255),
+(3,	'dddd',	50),
+(4,	'eeeee',	40),
+(5,	'dimon',	40),
+(6,	'dietz',	49),
+(7,	'deeeee',	40),
+(8,	'dennis',	254),
+(9,	'dddd',	50),
+(10,	'dennis',	233),
+(11,	'donald',	18);
+
 DROP TABLE IF EXISTS `opg01_comments`;
 CREATE TABLE `opg01_comments` (
   `id` int NOT NULL,
@@ -21,6 +34,24 @@ CREATE TABLE `opg01_comments` (
   CONSTRAINT `opg01_comments_ibfk_2` FOREIGN KEY (`FK_user`) REFERENCES `opg01_users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `opg01_comments` (`id`, `content`, `FK_post`, `FK_user`) VALUES
+(0,	'har du fået lov af helledie til at lave den post?',	0,	1),
+(1,	'@soelberg\r\nshjøøøør\r\nMvh Dietz',	0,	0);
+
+DROP TABLE IF EXISTS `opg01_friends`;
+CREATE TABLE `opg01_friends` (
+  `id` int unsigned NOT NULL,
+  `FK_user0` int NOT NULL,
+  `FK_user1` int NOT NULL,
+  KEY `user0` (`FK_user0`),
+  KEY `user1` (`FK_user1`),
+  CONSTRAINT `opg01_friends_ibfk_1` FOREIGN KEY (`FK_user0`) REFERENCES `opg01_users` (`id`),
+  CONSTRAINT `opg01_friends_ibfk_2` FOREIGN KEY (`FK_user1`) REFERENCES `opg01_users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `opg01_friends` (`id`, `FK_user0`, `FK_user1`) VALUES
+(0,	1,	2),
+(1,	1,	0);
 
 DROP TABLE IF EXISTS `opg01_posts`;
 CREATE TABLE `opg01_posts` (
@@ -34,6 +65,8 @@ CREATE TABLE `opg01_posts` (
   CONSTRAINT `opg01_posts_ibfk_1` FOREIGN KEY (`FK_user`) REFERENCES `opg01_users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `opg01_posts` (`id`, `title`, `content`, `FK_user`) VALUES
+(0,	'post #0',	'hello and welcome to my programming tutorial\r\n\r\ntoday we will learn how to use rust',	0);
 
 DROP TABLE IF EXISTS `opg01_users`;
 CREATE TABLE `opg01_users` (
@@ -50,4 +83,4 @@ INSERT INTO `opg01_users` (`id`, `name`, `permission`) VALUES
 (1,	'ole soelberg',	2),
 (2,	'ole helledie',	2);
 
--- 2022-05-02 12:54:57
+-- 2022-05-04 12:36:17
