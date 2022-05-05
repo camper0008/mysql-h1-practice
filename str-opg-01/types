@@ -1,4 +1,3 @@
-/*
 id=VARCHAR(36) UNIQUE PRIMARY KEY NOT NULL
 status=bit NOT NULL
 oprettet=timestamp NOT NULL
@@ -20,17 +19,17 @@ ejerlavkode=unsigned int NOT NULL
 ejerlavnavn=text NOT NULL
 matrikelnr=TEXT NOT NULL
 esrejendomsnr=unsigned int NOT NULL
-etrs=89koordinat_øst=float NOT NULL
-etrs=89koordinat_nord=float NOT NULL
-wgs=84koordinat_bredde=float NOT NULL
-wgs=84koordinat_længde=float NOT NULL
+etrs89koordinat_øst=double NOT NULL
+etrs89koordinat_nord=double NOT NULL
+wgs84koordinat_bredde=double NOT NULL
+wgs84koordinat_længde=double NOT NULL
 nøjagtighed=VARCHAR(1) NOT NULL
 kilde=unsigned int NOT NULL
 tekniskstandard=VARCHAR(2) NOT NULL
-tekstretning=float NOT NULL
-ddkn_m=100=text NOT NULL
-ddkn_km=1=text NOT NULL
-=10km_624_54=text NOT NULL
+tekstretning=double NOT NULL
+ddkn_m100=text NOT NULL
+ddkn_km1=text NOT NULL
+10km_624_54=text NOT NULL
 adressepunktændringsdato=timestamp NOT NULL
 adgangsadresseid=VARCHAR(36) NOT NULL
 adgangsadresse_status=bit NOT NULL
@@ -53,14 +52,14 @@ jordstykke_ejerlavkode=unsigned int NOT NULL
 jordstykke_matrikelnr=text NOT NULL
 jordstykke_esrejendomsnr=unsigned int NOT NULL
 kvh=text NOT NULL
-højde=float NOT NULL
+højde=double NOT NULL
 adgangspunktid=VARCHAR(36) NOT NULL
 vejpunkt_id=VARCHAR(36) NOT NULL
 vejpunkt_kilde=text NOT NULL
 vejpunkt_nøjagtighed=VARCHAR(1) NOT NULL
 vejpunkt_tekniskstandard=VARCHAR(2) NOT NULL
-vejpunkt_x=float NOT NULL
-vejpunkt_y=float NOT NULL
+vejpunkt_x=double NOT NULL
+vejpunkt_y=double NOT NULL
 afstemningsområdenummer=unsigned int NOT NULL
 afstemningsområdenavn=text NOT NULL
 brofast=bit NOT NULL
@@ -82,4 +81,3 @@ valglandsdelsnavn=text NOT NULL
 landsdelsnuts3=text NOT NULL
 landsdelsnavn=text NOT NULL
 betegnelse=text NOT NULL
-*/
