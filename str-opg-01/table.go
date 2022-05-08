@@ -1,18 +1,127 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
+
+type TableQuoteType int
+
+const (
+	InvalidHeader TableQuoteType = iota
+	Quoted
+	Unquoted
+)
 
 func DanishToEnglishFieldNames(names []string) []string {
 	res := []string{}
 	for i := 0; i < len(names); i++ {
-		res = append(res, strings.Replace(names[i], "æ", "ae", -1))
-		res = append(res, strings.Replace(names[i], "ø", "oe", -1))
-		res = append(res, strings.Replace(names[i], "å", "aa", -1))
+		newStr := names[i]
+		newStr = strings.Replace(newStr, "æ", "ae", -1)
+		newStr = strings.Replace(newStr, "ø", "oe", -1)
+		newStr = strings.Replace(newStr, "å", "aa", -1)
+		res = append(res, newStr)
 	}
 	return res
 }
 
-func TableTypes() map[string]string {
+func IntoTableQuoteType(headers []string) []TableQuoteType {
+	types := TableQuoteTypesMap()
+	res := []TableQuoteType{}
+	for i := range headers {
+		res = append(res, types[headers[i]])
+	}
+	return res
+}
+
+func TableQuoteTypesMap() map[string]TableQuoteType {
+	return map[string]TableQuoteType{
+		"id":                                     Quoted,   //VARCHAR(36) UNIQUE PRIMARY KEY NOT NULL",
+		"status":                                 Unquoted, //bit NOT NULL",
+		"oprettet":                               Quoted,   //timestamp NOT NULL",
+		"aendret":                                Quoted,   //timestamp NOT NULL",
+		"vejkode":                                Unquoted, //INT UNSIGNED NOT NULL ",
+		"vejnavn":                                Quoted,   //text NOT NULL",
+		"adresseringsvejnavn":                    Quoted,   //text NOT NULL",
+		"husnr":                                  Quoted,   //text NOT NULL",
+		"etage":                                  Quoted,   //text",
+		"doer":                                   Quoted,   //text",
+		"supplerendebynavn":                      Quoted,   //text",
+		"postnr":                                 Unquoted, //INT UNSIGNED NOT NULL",
+		"postnrnavn":                             Quoted,   //text NOT NULL",
+		"stormodtagerpostnr":                     Unquoted, //INT UNSIGNED",
+		"stormodtagerpostnrnavn":                 Quoted,   //text",
+		"kommunekode":                            Unquoted, //INT UNSIGNED NOT NULL",
+		"kommunenavn":                            Quoted,   //text NOT NULL",
+		"ejerlavkode":                            Unquoted, //INT UNSIGNED NOT NULL",
+		"ejerlavnavn":                            Quoted,   //text NOT NULL",
+		"matrikelnr":                             Quoted,   //TEXT NOT NULL",
+		"esrejendomsnr":                          Unquoted, //INT UNSIGNED NOT NULL",
+		"etrs89koordinat_oest":                   Unquoted, //double NOT NULL",
+		"etrs89koordinat_nord":                   Unquoted, //double NOT NULL",
+		"wgs84koordinat_bredde":                  Unquoted, //double NOT NULL",
+		"wgs84koordinat_laengde":                 Unquoted, //double NOT NULL",
+		"noejagtighed":                           Quoted,   //VARCHAR(1) NOT NULL",
+		"kilde":                                  Unquoted, //INT UNSIGNED NOT NULL",
+		"tekniskstandard":                        Unquoted, //VARCHAR(2) NOT NULL",
+		"tekstretning":                           Unquoted, //double NOT NULL",
+		"ddkn_m100":                              Quoted,   //text NOT NULL",
+		"ddkn_km1":                               Quoted,   //text NOT NULL",
+		"ddkn_km10":                              Quoted,   //text NOT NULL",
+		"adressepunktaendringsdato":              Quoted,   //timestamp NOT NULL",
+		"adgangsadresseid":                       Quoted,   //VARCHAR(36) NOT NULL",
+		"adgangsadresse_status":                  Unquoted, //bit NOT NULL",
+		"adgangsadresse_oprettet":                Quoted,   //timestamp NOT NULL",
+		"adgangsadresse_aendret":                 Quoted,   //timestamp NOT NULL",
+		"regionskode":                            Unquoted, //INT UNSIGNED NOT NULL",
+		"regionsnavn":                            Quoted,   //text NOT NULL",
+		"jordstykke_ejerlavnavn":                 Quoted,   //text NOT NULL",
+		"kvhx":                                   Quoted,   //text NOT NULL",
+		"sognekode":                              Unquoted, //INT UNSIGNED NOT NULL",
+		"sognenavn":                              Quoted,   //text NOT NULL",
+		"politikredskode":                        Unquoted, //INT UNSIGNED NOT NULL",
+		"politikredsnavn":                        Quoted,   //text NOT NULL",
+		"retskredskode":                          Unquoted, //INT UNSIGNED NOT NULL",
+		"retskredsnavn":                          Quoted,   //text NOT NULL",
+		"opstillingskredskode":                   Unquoted, //INT UNSIGNED NOT NULL",
+		"opstillingskredsnavn":                   Quoted,   //text NOT NULL",
+		"zone":                                   Quoted,   //text NOT NULL",
+		"jordstykke_ejerlavkode":                 Unquoted, //INT UNSIGNED NOT NULL",
+		"jordstykke_matrikelnr":                  Quoted,   //text NOT NULL",
+		"jordstykke_esrejendomsnr":               Unquoted, //INT UNSIGNED NOT NULL",
+		"kvh":                                    Quoted,   //text NOT NULL",
+		"hoejde":                                 Unquoted, //double NOT NULL",
+		"adgangspunktid":                         Quoted,   //VARCHAR(36) NOT NULL",
+		"vejpunkt_id":                            Quoted,   //VARCHAR(36) NOT NULL",
+		"vejpunkt_kilde":                         Quoted,   //text NOT NULL",
+		"vejpunkt_noejagtighed":                  Quoted,   //VARCHAR(1) NOT NULL",
+		"vejpunkt_tekniskstandard":               Quoted,   //VARCHAR(2) NOT NULL",
+		"vejpunkt_x":                             Unquoted, //double NOT NULL",
+		"vejpunkt_y":                             Unquoted, //double NOT NULL",
+		"afstemningsomraadenummer":               Unquoted, //INT UNSIGNED NOT NULL",
+		"afstemningsomraadenavn":                 Quoted,   //text NOT NULL",
+		"brofast":                                Unquoted, //bit NOT NULL",
+		"supplerendebynavn_dagi_id":              Unquoted, //INT UNSIGNED",
+		"navngivenvej_id":                        Quoted,   //VARCHAR(36) NOT NULL",
+		"menighedsraadsafstemningsomraadenummer": Unquoted, //INT UNSIGNED NOT NULL",
+		"menighedsraadsafstemningsomraadenavn":   Quoted,   //text NOT NULL",
+		"vejpunkt_aendret":                       Quoted,   //timestamp NOT NULL",
+		"ikrafttraedelse":                        Quoted,   //timestamp NOT NULL",
+		"nedlagt":                                Unquoted, //bit",
+		"adgangsadresse_ikrafttraedelse":         Quoted,   //timestamp NOT NULL",
+		"adgangsadresse_nedlagt":                 Quoted,   //timestamp",
+		"adgangsadresse_darstatus":               Quoted,   //INT UNSIGNED NOT NULL",
+		"darstatus":                              Quoted,   //INT UNSIGNED NOT NULL",
+		"storkredsnummer":                        Quoted,   //INT UNSIGNED NOT NULL",
+		"storkredsnavn":                          Quoted,   //text NOT NULL",
+		"valglandsdelsbogstav":                   Quoted,   //VARCHAR(1) NOT NULL",
+		"valglandsdelsnavn":                      Quoted,   //text NOT NULL",
+		"landsdelsnuts3":                         Quoted,   //text NOT NULL",
+		"landsdelsnavn":                          Quoted,   //text NOT NULL",
+		"betegnelse":                             Quoted,   //text NOT NULL",
+	}
+}
+
+func TableSQLTypes() map[string]string {
 	return map[string]string{
 		"id":                                     "VARCHAR(36) UNIQUE PRIMARY KEY NOT NULL",
 		"status":                                 "bit NOT NULL",
@@ -20,7 +129,7 @@ func TableTypes() map[string]string {
 		"aendret":                                "timestamp NOT NULL",
 		"vejkode":                                "INT UNSIGNED NOT NULL ",
 		"vejnavn":                                "text NOT NULL",
-		"addresseringsvejnavn":                   "text NOT NULL",
+		"adresseringsvejnavn":                    "text NOT NULL",
 		"husnr":                                  "text NOT NULL",
 		"etage":                                  "text",
 		"doer":                                   "text",
@@ -39,13 +148,13 @@ func TableTypes() map[string]string {
 		"etrs89koordinat_nord":                   "double NOT NULL",
 		"wgs84koordinat_bredde":                  "double NOT NULL",
 		"wgs84koordinat_laengde":                 "double NOT NULL",
-		"noejagtihed":                            "VARCHAR(1) NOT NULL",
+		"noejagtighed":                           "VARCHAR(1) NOT NULL",
 		"kilde":                                  "INT UNSIGNED NOT NULL",
 		"tekniskstandard":                        "VARCHAR(2) NOT NULL",
 		"tekstretning":                           "double NOT NULL",
 		"ddkn_m100":                              "text NOT NULL",
 		"ddkn_km1":                               "text NOT NULL",
-		"10km_624_54":                            "text NOT NULL",
+		"ddkn_km10":                              "text NOT NULL",
 		"adressepunktaendringsdato":              "timestamp NOT NULL",
 		"adgangsadresseid":                       "VARCHAR(36) NOT NULL",
 		"adgangsadresse_status":                  "bit NOT NULL",
