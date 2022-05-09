@@ -1,8 +1,4 @@
-package main
-
-import (
-	"strings"
-)
+package defs
 
 type TableQuoteType int
 
@@ -11,27 +7,6 @@ const (
 	Quoted
 	Unquoted
 )
-
-func DanishToEnglishFieldNames(names []string) []string {
-	res := []string{}
-	for i := 0; i < len(names); i++ {
-		newStr := names[i]
-		newStr = strings.Replace(newStr, "æ", "ae", -1)
-		newStr = strings.Replace(newStr, "ø", "oe", -1)
-		newStr = strings.Replace(newStr, "å", "aa", -1)
-		res = append(res, newStr)
-	}
-	return res
-}
-
-func IntoTableQuoteType(headers []string) []TableQuoteType {
-	types := TableQuoteTypesMap()
-	res := []TableQuoteType{}
-	for i := range headers {
-		res = append(res, types[headers[i]])
-	}
-	return res
-}
 
 func TableQuoteTypesMap() map[string]TableQuoteType {
 	return map[string]TableQuoteType{
