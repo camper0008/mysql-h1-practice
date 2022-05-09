@@ -28,7 +28,7 @@ func ReadCSVEverythingElse(filename string) []string {
 
 	scanner := bufio.NewScanner(file)
 	scanner.Scan() // advance once to skip header
-	res := make([]string, 0)
+	res := []string{}
 	for scanner.Scan() {
 		res = append(res, scanner.Text())
 	}

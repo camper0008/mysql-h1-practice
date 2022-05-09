@@ -3,22 +3,44 @@ package main
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 func splitLine(line string) []string {
+	linebytes := []byte(line)
 	res := []string{}
 	isInQuotes := false
-	buffer := ""
-	for i := 0; i < len(line); i++ {
-		if line[i] == '"' {
+	buffer := []rune{}
+
+	for len(linebytes) > 0 {
+		r, size := utf8.DecodeRune(linebytes)
+
+		if r == '"' {
 			isInQuotes = !isInQuotes
-		} else if line[i] == ',' && !isInQuotes {
-			res = append(res, buffer)
-			buffer = ""
+		} else if r == ',' && !isInQuotes {
+			res = append(res, string(buffer))
+			buffer = []rune{}
 		} else {
-			buffer += string(line[i])
+			buffer = append(buffer, r)
 		}
+
+		linebytes = linebytes[size:]
 	}
+
+	/*
+		for i := 0; i < len(line); i++ {
+			if line[i] == '"' {
+				isInQuotes = !isInQuotes
+			} else if line[i] == ',' && !isInQuotes {
+				res = append(res, string(buffer))
+				buffer = []byte{}
+			} else {
+				r, _ := utf8.DecodeRune(linebyte)
+				buffer = append(buffer, r)
+			}
+		}
+	*/
+	res = append(res, string(buffer))
 	return res
 }
 
@@ -43,7 +65,7 @@ func convertCSVValuesToSQLValues(line string, quoteTypes []TableQuoteType) strin
 	return "(" + strings.Join(res, ",") + ")"
 }
 
-func modifyHeader(filename string) []string {
+func ModifyHeader(filename string) []string {
 	rawHeader := ReadCSVHeader(filename)
 
 	splitHeader := strings.Split(rawHeader, ",")
@@ -51,7 +73,7 @@ func modifyHeader(filename string) []string {
 	return globalizedHeader
 }
 
-func modifyValues(filename string, modifiedHeaders []string) []string {
+func ModifyValues(filename string, modifiedHeaders []string) []string {
 	values := ReadCSVEverythingElse(filename)
 	types := IntoTableQuoteType(modifiedHeaders)
 
@@ -64,13 +86,12 @@ func modifyValues(filename string, modifiedHeaders []string) []string {
 	return res
 }
 
-func main() {
-	const FILENAME string = "./address.csv"
-	headers := modifyHeader(FILENAME)
-	values := modifyValues(FILENAME, headers)
-
-	fmt.Printf("INSERT INTO address\n(%s)\nVALUES\n", strings.Join(headers, ","))
-	for i := 0; i < len(values) && i < 2; i++ {
-		fmt.Println(values[i])
+func CreateStatement(modifiedHeaders []string) string {
+	sqlTypes := TableSQLTypes()
+	impl := []string{}
+	for i := 0; i < len(modifiedHeaders); i++ {
+		impl = append(impl, modifiedHeaders[i]+" "+sqlTypes[modifiedHeaders[i]])
 	}
+
+	return fmt.Sprintf("CREATE TABLE IF NOT EXISTS address (%s)", strings.Join(impl, ","))
 }
