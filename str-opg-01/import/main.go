@@ -59,6 +59,10 @@ func main() {
 	fmt.Printf("%0.2f%% [%d / %d]\n", 100.0, len(values), len(values))
 	fmt.Println("done!")
 
+	fmt.Println("inserting supplied city name table...")
+	db_utils.SuppliedCityName(db)
+	fmt.Println("done!")
+
 	fmt.Println("inserting post code map table...")
 	db_utils.PostCodeMap(db)
 	fmt.Println("done!")
@@ -67,8 +71,12 @@ func main() {
 	db_utils.RegionCodeMap(db)
 	fmt.Println("done!")
 
-	fmt.Println("inserting address table...")
-	db_utils.Address(db)
+	fmt.Println("inserting road table...")
+	db_utils.Road(db)
+	fmt.Println("done!")
+
+	fmt.Println("inserting house table... (this may take a while)")
+	db_utils.House(db)
 	fmt.Println("done!")
 
 	fmt.Println("inserting postcard view...")
