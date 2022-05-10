@@ -2,6 +2,7 @@ package utils
 
 import (
 	"csv-to-mysql/table/defs"
+	"csv-to-mysql/utils"
 	"database/sql"
 	"fmt"
 	"strings"
@@ -70,14 +71,10 @@ func ConvertCSVValuesToSQLValues(line string, quoteTypes []defs.TableQuoteType) 
 
 func InitializeDb(db *sql.DB, modifiedHeaders []string) {
 	_, err := db.Exec("DROP TABLE IF EXISTS raw")
-	if err != nil {
-		panic(err)
-	}
+	utils.LogError(err)
 
 	_, err = db.Exec(createTableStatement(modifiedHeaders))
-	if err != nil {
-		panic(err)
-	}
+	utils.LogError(err)
 }
 
 func insertIntoStatement(headers []string, values []string) string {
@@ -93,7 +90,5 @@ func InsertInto(db *sql.DB, headers []string, values []string) {
 	query := insertIntoStatement(headers, values)
 
 	_, err := db.Exec(query)
-	if err != nil {
-		panic(err)
-	}
+	utils.LogError(err)
 }

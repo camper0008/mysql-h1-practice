@@ -1,6 +1,7 @@
 package db_api
 
 import (
+	"csv-to-mysql/utils"
 	"database/sql"
 	"time"
 
@@ -9,18 +10,14 @@ import (
 
 func Connect() *sql.DB {
 	db, err := sql.Open("mysql", "root:example@/h1_opg01")
-	if err != nil {
-		panic(err)
-	}
+	utils.LogError(err)
 
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)
 
 	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
+	utils.LogError(err)
 
 	return db
 }

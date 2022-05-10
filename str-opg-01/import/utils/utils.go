@@ -4,6 +4,12 @@ import (
 	"strings"
 )
 
+func LogError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func DanishToEnglishFieldNames(names []string) []string {
 	res := []string{}
 	for i := 0; i < len(names); i++ {
