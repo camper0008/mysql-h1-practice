@@ -16,7 +16,7 @@ func Postcard(db *sql.DB) {
 			adresse.id, adresse.vej_navn, 
 			adresse.hus_nr, adresse.etage, 
 			adresse.doer, adresse.post_nr, 
-			post_nr_map.navn AS post_nr_navn, 
+			post_nr_map.navn AS by, 
 			region_nr_map.navn AS region
 		FROM (adresse)
 		JOIN (post_nr_map) ON (adresse.post_nr = post_nr_map.nr)
