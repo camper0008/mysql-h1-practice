@@ -8,7 +8,7 @@ import (
 )
 
 func SuppliedCityName(db *sql.DB) {
-	_, err := db.Exec("DROP TABLE IF EXISTS supplerende_by")
+	_, err := db.Exec("DROP TABLE IF EXISTS hus, supplerende_by")
 	utils.LogError(err)
 
 	types := defs.TableSQLTypes()
@@ -28,6 +28,7 @@ func SuppliedCityName(db *sql.DB) {
 		INSERT INTO supplerende_by (
 			SELECT UUID() as id, unik_suplerende_by.navn FROM 
 			(SELECT DISTINCT raw.supplerendebynavn AS navn FROM raw) AS unik_suplerende_by
+			WHERE unik_suplerende_by.navn IS NOT NULL
 		)`)
 	_, err = db.Exec(insertQuery)
 	utils.LogError(err)
@@ -43,12 +44,12 @@ func Postcard(db *sql.DB) {
 			hus.nr, 
 			hus.etage, 
 			hus.doer,
-			supplerende_by.navn as supplerende_by_navn, 
+			supplerende_by.navn as supplerende_by, 
 			vej.post_nr, 
 			post_nr_map.navn AS post_nr_navn, 
 			region_nr_map.navn AS region
 		FROM (hus)
-		JOIN (supplerende_by) ON (hus.supplerende_by_id = supplerende_by.id)
+		LEFT JOIN (supplerende_by) ON (hus.supplerende_by_id = supplerende_by.id)
 		JOIN (vej) ON (vej.id = hus.vej_id)
 		JOIN (post_nr_map) ON (vej.post_nr = post_nr_map.nr)
 		JOIN (region_nr_map) ON (vej.region_nr = region_nr_map.nr)
@@ -78,7 +79,7 @@ func House(db *sql.DB) {
 		types["husnr"],
 		types["etage"],
 		types["doer"],
-		"VARCHAR(36) NOT NULL",
+		"VARCHAR(36)",
 		"VARCHAR(36) NOT NULL")
 
 	_, err = db.Exec(createQuery)
@@ -96,7 +97,7 @@ func House(db *sql.DB) {
 			FROM raw
 			JOIN vej
 			ON (raw.vejnavn = vej.navn) AND (raw.postnr = vej.post_nr)
-			JOIN supplerende_by
+			LEFT JOIN supplerende_by
 			ON (raw.supplerendebynavn = supplerende_by.navn)
 		)`)
 
