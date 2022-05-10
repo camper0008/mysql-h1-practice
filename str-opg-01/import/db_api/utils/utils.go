@@ -15,7 +15,7 @@ func createTableStatement(modifiedHeaders []string) string {
 		impl = append(impl, modifiedHeaders[i]+" "+sqlTypes[modifiedHeaders[i]])
 	}
 
-	return fmt.Sprintf("CREATE TABLE IF NOT EXISTS address (%s)", strings.Join(impl, ","))
+	return fmt.Sprintf("CREATE TABLE IF NOT EXISTS raw (%s)", strings.Join(impl, ","))
 }
 
 func quoteRespectingCommaSplit(line string) []string {
@@ -69,7 +69,7 @@ func ConvertCSVValuesToSQLValues(line string, quoteTypes []defs.TableQuoteType) 
 }
 
 func InitializeDb(db *sql.DB, modifiedHeaders []string) {
-	_, err := db.Exec("DROP TABLE IF EXISTS address")
+	_, err := db.Exec("DROP TABLE IF EXISTS raw")
 	if err != nil {
 		panic(err)
 	}
@@ -82,7 +82,7 @@ func InitializeDb(db *sql.DB, modifiedHeaders []string) {
 
 func insertIntoStatement(headers []string, values []string) string {
 	query := fmt.Sprintf(
-		"INSERT INTO address\n(%s)\nVALUES\n%s\n",
+		"INSERT INTO raw\n(%s)\nVALUES\n%s\n",
 		strings.Join(headers, ","),
 		strings.Join(values, ","),
 	)
