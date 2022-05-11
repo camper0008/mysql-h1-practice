@@ -46,13 +46,13 @@ func Postcard(db *sql.DB) {
 			hus.doer,
 			supplerende_by.navn as supplerende_by, 
 			vej.post_nr, 
-			post_nr_map.navn AS post_nr_navn, 
-			region_nr_map.navn AS region
+			post_nr.navn AS post_nr_navn, 
+			region_nr.navn AS region
 		FROM (hus)
 		LEFT JOIN (supplerende_by) ON (hus.supplerende_by_id = supplerende_by.id)
 		JOIN (vej) ON (vej.id = hus.vej_id)
-		JOIN (post_nr_map) ON (vej.post_nr = post_nr_map.nr)
-		JOIN (region_nr_map) ON (vej.region_nr = region_nr_map.nr)
+		JOIN (post_nr) ON (vej.post_nr = post_nr.nr)
+		JOIN (region_nr) ON (vej.region_nr = region_nr.nr)
 	`)
 	createQuery := fmt.Sprintf("CREATE VIEW postkort AS %s", selectQuery)
 	_, err = db.Exec(createQuery)
@@ -116,8 +116,8 @@ func Road(db *sql.DB) {
 			navn %s,
 			post_nr %s,
 			region_nr %s,
-			FOREIGN KEY (post_nr) REFERENCES post_nr_map(nr),
-			FOREIGN KEY (region_nr) REFERENCES region_nr_map(nr)
+			FOREIGN KEY (post_nr) REFERENCES post_nr(nr),
+			FOREIGN KEY (region_nr) REFERENCES region_nr(nr)
 		)`,
 		types["id"],
 		types["vejnavn"],
@@ -138,11 +138,11 @@ func Road(db *sql.DB) {
 }
 
 func PostCodeMap(db *sql.DB) {
-	_, err := db.Exec("DROP TABLE IF EXISTS hus, vej, post_nr_map")
+	_, err := db.Exec("DROP TABLE IF EXISTS hus, vej, post_nr")
 	utils.LogError(err)
 
 	types := defs.TableSQLTypes()
-	createQuery := fmt.Sprintf(`CREATE TABLE post_nr_map (nr %s, navn %s)`,
+	createQuery := fmt.Sprintf(`CREATE TABLE post_nr (nr %s, navn %s)`,
 		types["postnr"]+" UNIQUE PRIMARY KEY",
 		types["postnrnavn"])
 
@@ -150,17 +150,17 @@ func PostCodeMap(db *sql.DB) {
 	utils.LogError(err)
 
 	valuesQuery := `SELECT DISTINCT postnr AS nr, postnrnavn AS navn FROM raw`
-	insertQuery := fmt.Sprintf("INSERT INTO post_nr_map %s", valuesQuery)
+	insertQuery := fmt.Sprintf("INSERT INTO post_nr %s", valuesQuery)
 	_, err = db.Exec(insertQuery)
 	utils.LogError(err)
 }
 
 func RegionCodeMap(db *sql.DB) {
-	_, err := db.Exec("DROP TABLE IF EXISTS hus, vej, region_nr_map")
+	_, err := db.Exec("DROP TABLE IF EXISTS hus, vej, region_nr")
 	utils.LogError(err)
 
 	types := defs.TableSQLTypes()
-	createQuery := fmt.Sprintf(`CREATE TABLE region_nr_map (nr %s, navn %s)`,
+	createQuery := fmt.Sprintf(`CREATE TABLE region_nr (nr %s, navn %s)`,
 		types["regionskode"]+" UNIQUE PRIMARY KEY",
 		types["regionsnavn"])
 
@@ -168,7 +168,7 @@ func RegionCodeMap(db *sql.DB) {
 	utils.LogError(err)
 
 	valuesQuery := `SELECT DISTINCT regionskode AS nr, regionsnavn AS navn FROM raw`
-	insertQuery := fmt.Sprintf("INSERT INTO region_nr_map %s", valuesQuery)
+	insertQuery := fmt.Sprintf("INSERT INTO region_nr %s", valuesQuery)
 	_, err = db.Exec(insertQuery)
 	utils.LogError(err)
 }
